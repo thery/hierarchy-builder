@@ -99,6 +99,13 @@ pred mixins-w-params.fun i:list-w-params mixinname, i:(list term -> term -> term
 mixins-w-params.fun L P Out :- !,
   w-params.then L mk-fun mk-fun (p\ t\ ml\ under-mixins.then ml mk-fun (P p t)) Out.
 
+% [mixins-w-params.length LwP N] states N is Nmixins+Nparams
+pred mixins-w-params.length i:list-w-params mixinname, o:int.
+mixins-w-params.length MLwP N :-
+  w-params.nparams MLwP Nparams,
+  std.length {list-w-params_list MLwP} Nmixins,
+  N is Nparams + Nmixins.
+
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- private code ------------------------------ */
 /* ------------------------------------------------------------------------- */
@@ -110,6 +117,8 @@ namespace private {
 pred mixin-for i:term, i:mixinname, o:term.
 mixin-for T M MI :- mixin-src T M Tm, !, std.do! [
   std.assert-ok! (coq.typecheck Tm Ty) "mixin-for: Tm illtyped",
+
+%%%%% mterm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   factory? Ty (triple Factory Params _),
 
